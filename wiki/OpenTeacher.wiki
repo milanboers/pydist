@@ -1,0 +1,3 @@
+=OpenTeacher=
+
+OpenTeacher (http://www.openteacher.org/) is the project PyDist was originally made for. To package OpenTeacher in a reliable way that still keeps the Python interpreter in place (for dynamic plug-ins). Because PyDist might be useful to other projects, it is released seperately.
