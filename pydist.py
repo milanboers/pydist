@@ -16,8 +16,9 @@ class Everything():
 
 #qt.conf
 class PyDist():
-	def __init__(self, path, verbose, pythonPath, includes=None, pyQtCopy=False, silent=False, compile=False, includedExtensions=[".py",".pyd",".dll",".pth",".conf"], excludedExtensions=[]):
+	def __init__(self, path, verbose, dllPath, pythonPath, includes=None, pyQtCopy=False, silent=False, compile=False, includedExtensions=[".py",".pyd",".dll",".pth",".conf"], excludedExtensions=[]):
 		self.path = path
+		self.dllPath = dllPath
 		self.pythonPath = pythonPath
 		self.includes = includes
 		self.pyQtCopy = pyQtCopy
@@ -87,6 +88,8 @@ class PyDist():
 			shutil.copyfile(os.path.join(self.pythonPath, "pythonw.exe"), os.path.join(self.distdir, "python", "pythonw.exe"))
 		else:
 			shutil.copyfile(os.path.join(self.pythonPath, "python.exe"), os.path.join(self.distdir, "python", "python.exe"))
+		print "Copying python dll"
+		shutil.copyfile(self.dllPath, os.path.join(self.distdir, "python", os.path.basename(self.dllPath)))
 		
 		# Copy the source and recursively all imports
 		self._copyTree(os.path.dirname(self.path), self.distdir + "\src", self.sourceIncludedExtensions, self.sourceExcludedExtensions)
@@ -286,6 +289,7 @@ class PyDist():
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--filepath", help="Path to the program you want to distribute (.py file)")
 parser.add_argument("-i", "--include", help="Adds additional packages/modules seperated by comma's (,) (optional)")
+parser.add_argument("-d", "--dllpath", help="Path to python27.dll (or other version)")
 parser.add_argument("-p", "--pythonpath", help="Path to python (optional)")
 parser.add_argument("-q", "--pyqt", action="store_true", default=False, help="Copy extra DLLs necessary for PyQt4 programs. Warning: experimental! (optional)")
 parser.add_argument("-c", "--compile", action="store_true", default=False, help="Precompile the .py files so they load faster (optional)")
@@ -328,5 +332,5 @@ if pythonPath == None:
 		print "Environment variable PYTHONPATH does not exist. Please manually specify path of you Python installation with the --pythonpath flag"
 		sys.exit()
 
-pyDist = PyDist(args.filepath, args.verbose, args.pythonpath, includes, args.pyqt, args.silent, args.compile, includedExtensions, excludedExtensions)
+pyDist = PyDist(args.filepath, args.verbose, args.dllpath, args.pythonpath, includes, args.pyqt, args.silent, args.compile, includedExtensions, excludedExtensions)
 pyDist.distribute()
