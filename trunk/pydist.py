@@ -587,8 +587,10 @@ if __name__ == "__main__":
 	
 	pyDist = PyDist(args.verbose)
 	libLocation = pyDist.createPythonLibrary(src, exe, pythonLib, includes, compile)
-	pyDist.createWindowsPackage(src, exe, libLocation, winPythonPath, winDllPath, console, compile)
-	pyDist.createOSXPackage(src, exe, name, libLocation, macPythonPath, iconPath, qtLibsPath, qtMenuPath, compile=False)
+	if configFile.find("windows") != None:
+		pyDist.createWindowsPackage(src, exe, libLocation, winPythonPath, winDllPath, console, compile)
+	if configFile.find("macosx") != None:
+		pyDist.createOSXPackage(src, exe, name, libLocation, macPythonPath, iconPath, qtLibsPath, qtMenuPath, compile=False)
 	# Remove temporary directory
 	print "Removing temporary files..."
 	shutil.rmtree(libLocation)
